@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Cors;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +7,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(cfg =>
+            {
+                cfg.WithOrigins(builder.Configuration["AllowedOrigins"]);
+                cfg.AllowAnyHeader();
+                cfg.AllowAnyMethod();
+            }
+        );
+        options.AddPolicy(name: "AnyOrigin", cfg =>
+            {
+                cfg.AllowAnyHeader();
+                cfg.AllowAnyMethod();
+                cfg.AllowAnyOrigin();
+            }
+        );
+    }
+);
 
 var app = builder.Build();
 
@@ -26,6 +46,7 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 
@@ -49,8 +70,8 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
-app.MapGet("/error", () => Results.Problem());
-app.MapGet("/error/test", () => { throw new Exception("test"); });
+app.MapGet("/error", [EnableCors("AnyOrigin")] () => Results.Problem());
+app.MapGet("/error/test", [EnableCors("AnyOrigin")] () => { throw new Exception("test"); });
 
 app.Run();
 
