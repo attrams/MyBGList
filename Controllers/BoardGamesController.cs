@@ -14,6 +14,7 @@ namespace MyBGList.Controllers
         }
 
         [HttpGet(Name = "GetBoardGames")]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
         public IEnumerable<BoardGame> Get()
         {
             return new[] {
