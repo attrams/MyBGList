@@ -4,3 +4,8 @@ GET {{MyBGList_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{MyBGList_HostAddress}}/BoardGames/
+Accept: application/json
+
+###
