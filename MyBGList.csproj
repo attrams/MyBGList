@@ -4,9 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>2a8221aa-a9df-45d7-892f-a3eccdd6b05f</UserSecretsId>
   </PropertyGroup>
 
-   <ItemGroup>
+  <ItemGroup>
     <Compile Remove="Controllers\ErrorController.cs" />
   </ItemGroup>
 
