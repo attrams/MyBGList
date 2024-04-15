@@ -34,7 +34,7 @@ namespace MyBGList.Models.Csv
         public int? BGGRank { get; set; }
 
         [Name(name: "Complexity Average")]
-        public int? ComplexityAverage { get; set; }
+        public decimal? ComplexityAverage { get; set; }
 
         [Name(name: "Owned Users")]
         public int? OwnedUsers { get; set; }
