@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyBGList.DTO;
 using MyBGList.Models;
 
@@ -9,35 +10,23 @@ namespace MyBGList.Controllers
     public class BoardGamesController : ControllerBase
     {
         private readonly ILogger<BoardGamesController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public BoardGamesController(ILogger<BoardGamesController> logger)
+        public BoardGamesController(ILogger<BoardGamesController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         [HttpGet(Name = "GetBoardGames")]
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
-        public RestDTO<BoardGame[]> Get()
+        public async Task<RestDTO<BoardGame[]>> Get()
         {
+            var query = _context.BoardGames;
+
             return new RestDTO<BoardGame[]>()
             {
-                Data = new BoardGame[]{
-                    new BoardGame(){
-                    Id = 1,
-                    Name = "Axis & Allies",
-                    Year = 1981
-                    },
-                    new BoardGame(){
-                        Id = 2,
-                        Name = "Citadels",
-                        Year = 2000
-                    },
-                    new BoardGame(){
-                        Id = 3,
-                        Name = "Terraforming Mars",
-                        Year = 2016
-                    }
-                },
+                Data = await query.ToArrayAsync(),
                 Links = new List<LinkDTO>{
                     new LinkDTO(Url.Action(null, "BoardGames", null, Request.Scheme)!, "self", "GET")
                 }
