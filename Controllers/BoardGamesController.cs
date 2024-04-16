@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MyBGList.Attributes;
 using MyBGList.DTO;
 using MyBGList.Models;
 
@@ -26,7 +27,7 @@ namespace MyBGList.Controllers
             int pageIndex = 0,
             [Range(1, 100)] int pageSize = 10,
             string? sortColumn = "Name",
-            [RegularExpression("(?i)ASC|DESC")] string? sortOrder = "ASC",
+            [SortOrderValidator] string? sortOrder = "ASC",
             string? filterQuery = null
         )
         {
