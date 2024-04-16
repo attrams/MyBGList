@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-GET {{MyBGList_HostAddress}}/BoardGames/
+GET {{MyBGList_HostAddress}}/BoardGames?filterQuery=diplomacy
 Accept: application/json
 
 ###
