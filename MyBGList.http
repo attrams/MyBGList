@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-GET {{MyBGList_HostAddress}}/BoardGames?filterQuery=diplomacy
+GET {{MyBGList_HostAddress}}/BoardGames?pageSize=50&sortOrder=desc
 Accept: application/json
 
 ###
