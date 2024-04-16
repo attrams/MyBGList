@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,13 @@ namespace MyBGList.Controllers
 
         [HttpGet(Name = "GetBoardGames")]
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
-        public async Task<RestDTO<BoardGame[]>> Get(int pageIndex = 0, int pageSize = 10, string? sortColumn = "Name", string? sortOrder = "ASC", string? filterQuery = null)
+        public async Task<RestDTO<BoardGame[]>> Get(
+            int pageIndex = 0,
+            [Range(1, 100)] int pageSize = 10,
+            string? sortColumn = "Name",
+            [RegularExpression("(?i)ASC|DESC")] string? sortOrder = "ASC",
+            string? filterQuery = null
+        )
         {
             var query = _context.BoardGames.AsQueryable();
 
