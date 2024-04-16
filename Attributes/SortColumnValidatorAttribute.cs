@@ -6,7 +6,7 @@ namespace MyBGList.Attributes
     {
         public Type EntityType { get; set; }
 
-        public SortColumnValidatorAttribute(Type entityType) : base("Value must match an existing column.")
+        public SortColumnValidatorAttribute(Type entityType) : base("Value must be one of the following: {0}.")
         {
             EntityType = entityType;
         }
@@ -23,7 +23,7 @@ namespace MyBGList.Attributes
                 }
             }
 
-            return new ValidationResult(ErrorMessage);
+            return new ValidationResult(FormatErrorMessage(string.Join(", ", EntityType!.GetProperties().Select(property => property.Name).ToArray())));
         }
     }
 }

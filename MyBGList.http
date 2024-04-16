@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-GET {{MyBGList_HostAddress}}/BoardGames?pageSize=10&sortOrder=desc&sortColumn=nAme
+GET {{MyBGList_HostAddress}}/BoardGames?pageSize=10&sortOrder=desc&sortColumn=name
 Accept: application/json
 
 ###
