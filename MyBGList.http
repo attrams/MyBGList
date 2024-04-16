@@ -1,5 +1,10 @@
 @MyBGList_HostAddress = http://localhost:40080
 
+GET {{MyBGList_HostAddress}}/swagger/v1/swagger.json
+Accept: application/json
+
+###
+
 GET {{MyBGList_HostAddress}}/weatherforecast/
 Accept: application/json
 
