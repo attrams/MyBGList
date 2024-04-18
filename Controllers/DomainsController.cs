@@ -30,8 +30,7 @@ public class DomainsController : ControllerBase
             details.Extensions["traceId"] = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
             if (ModelState.Keys.Any(k => k == "PageSize"))
             {
-                details.Type =
-                    "https://tools.ietf.org/html/rfc7231#section-6.6.2";
+                details.Type = "https://tools.ietf.org/html/rfc7231#section-6.6.2";
                 details.Status = StatusCodes.Status501NotImplemented;
                 return new ObjectResult(details)
                 {
@@ -40,8 +39,7 @@ public class DomainsController : ControllerBase
             }
             else
             {
-                details.Type =
-                    "https://tools.ietf.org/html/rfc7231#section-6.5.1";
+                details.Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1";
                 details.Status = StatusCodes.Status400BadRequest;
                 return new BadRequestObjectResult(details);
             }
