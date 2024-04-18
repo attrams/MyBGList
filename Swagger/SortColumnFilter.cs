@@ -9,7 +9,9 @@ public class SortColumnFilter : IParameterFilter
 {
     public void Apply(OpenApiParameter parameter, ParameterFilterContext context)
     {
-        var attributes = context.ParameterInfo?.GetCustomAttributes(true).OfType<SortColumnValidatorAttribute>();
+        var attributes = context.ParameterInfo?.GetCustomAttributes(true).Union(
+            context.ParameterInfo.ParameterType.GetProperties().Where(property => property.Name == parameter.Name).SelectMany(property => property.GetCustomAttributes(true))
+        ).OfType<SortColumnValidatorAttribute>();
 
         if (attributes != null)
         {
