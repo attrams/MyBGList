@@ -14,3 +14,11 @@ GET {{MyBGList_HostAddress}}/BoardGames?pageSize=10&sortOrder=desc&sortColumn=na
 Accept: application/json
 
 ###
+
+GET {{MyBGList_HostAddress}}/Domains?pageSize=101
+
+###
+
+GET {{MyBGList_HostAddress}}/Domains?sortOrder=InvalidValue
+
+###
