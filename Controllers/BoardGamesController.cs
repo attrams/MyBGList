@@ -23,6 +23,8 @@ namespace MyBGList.Controllers
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
         public async Task<RestDTO<BoardGame[]>> Get([FromQuery] RequestDTO<BoardGameDTO> input)
         {
+            _logger.LogInformation("Get method started.");
+
             var query = _context.BoardGames.AsQueryable();
 
             if (!string.IsNullOrEmpty(input.FilterQuery))
