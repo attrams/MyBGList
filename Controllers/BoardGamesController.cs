@@ -1,6 +1,7 @@
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MyBGList.Constants;
 using MyBGList.DTO;
 using MyBGList.Models;
 
@@ -23,7 +24,7 @@ namespace MyBGList.Controllers
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
         public async Task<RestDTO<BoardGame[]>> Get([FromQuery] RequestDTO<BoardGameDTO> input)
         {
-            _logger.LogInformation("Get method started.");
+            _logger.LogInformation(CustomLogEvents.BoardGamesController_Get, "Get method started.");
 
             var query = _context.BoardGames.AsQueryable();
 
