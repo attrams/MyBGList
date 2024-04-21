@@ -45,13 +45,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-builder.Logging.ClearProviders().AddSimpleConsole(options =>
-    {
-        options.SingleLine = true;
-        options.TimestampFormat = "HH:mm:ss ";
-        options.UseUtcTimestamp = true;
-    })
-    .AddDebug();
+builder.Logging.ClearProviders().AddSimpleConsole().AddDebug();
 
 var app = builder.Build();
 
