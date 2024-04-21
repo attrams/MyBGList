@@ -46,7 +46,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-builder.Logging.ClearProviders().AddSimpleConsole().AddDebug();
+builder.Logging.ClearProviders().AddSimpleConsole().AddDebug().AddApplicationInsights(
+    telemetry => telemetry.ConnectionString = builder.Configuration["Azure:ApplicationInsights:ConnectionString"], loggerOptions => { }
+);
 
 var app = builder.Build();
 
