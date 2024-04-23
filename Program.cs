@@ -54,6 +54,8 @@ builder.Logging.ClearProviders().AddSimpleConsole().AddDebug().AddApplicationIns
 builder.Host.UseSerilog((ctx, lc) =>
     {
         lc.ReadFrom.Configuration(ctx.Configuration);
+        lc.Enrich.WithMachineName();
+        lc.Enrich.WithThreadId();
         lc.WriteTo.MSSqlServer(
             connectionString: ctx.Configuration.GetConnectionString("DefaultConnection"),
             sinkOptions: new MSSqlServerSinkOptions { TableName = "LogEvents", AutoCreateSqlTable = true },
