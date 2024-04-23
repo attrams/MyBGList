@@ -56,6 +56,7 @@ builder.Host.UseSerilog((ctx, lc) =>
         lc.ReadFrom.Configuration(ctx.Configuration);
         lc.Enrich.WithMachineName();
         lc.Enrich.WithThreadId();
+        lc.WriteTo.File("Logs/log.txt", outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{MachineName} #{ThreadId}] {Message:lj}{NewLine}{Exception}", rollingInterval: RollingInterval.Day);
         lc.WriteTo.MSSqlServer(
             connectionString: ctx.Configuration.GetConnectionString("DefaultConnection"),
             sinkOptions: new MSSqlServerSinkOptions { TableName = "LogEvents", AutoCreateSqlTable = true },
