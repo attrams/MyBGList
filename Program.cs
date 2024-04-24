@@ -18,6 +18,9 @@ builder.Services.AddControllers(options =>
         options.ModelBindingMessageProvider.SetValueMustBeANumberAccessor((x) => $"The field {x} must be a number.");
         options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => $"The value '{x}' is not valid for {y}.");
         options.ModelBindingMessageProvider.SetMissingKeyOrValueAccessor(() => "A value is required.");
+
+        options.CacheProfiles.Add("NoCache", new CacheProfile() { NoStore = true });
+        options.CacheProfiles.Add("Any-60", new CacheProfile() { Location = ResponseCacheLocation.Any, Duration = 60 });
     }
 );
 builder.Services.AddEndpointsApiExplorer();
@@ -94,6 +97,18 @@ else
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthorization();
+app.Use((context, next) =>
+{
+    // context.Response.Headers["cache-control"] = "no-cache, no-store";
+
+    context.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+    {
+        NoCache = true,
+        NoStore = true
+    };
+
+    return next.Invoke();
+});
 app.MapControllers();
 
 var summaries = new[]
@@ -147,6 +162,17 @@ app.MapGet("/cod/test", [EnableCors("AnyOrigin")][ResponseCache(NoStore = true)]
         "<noscript>Your client does not support JavaScript</noscript>",
         "text/html"
 ));
+
+app.MapGet("/cache/test/1", [EnableCors("AnyOrigin")] (HttpContext context) =>
+{
+    context.Response.Headers["cache-control"] = "no-cache, no-store";
+    return Results.Ok();
+});
+
+app.MapGet("/cache/test/2", [EnableCors("AnyOrigin")] (HttpContext context) =>
+{
+    return Results.Ok();
+});
 
 app.Run();
 
