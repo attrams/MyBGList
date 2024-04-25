@@ -82,12 +82,21 @@ builder.Services.AddResponseCaching(options =>
 });
 
 builder.Services.AddMemoryCache();
+
+// SQL SERVER for caching
 builder.Services.AddDistributedSqlServerCache(options =>
 {
     options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.SchemaName = "dbo";
     options.TableName = "AppCache";
 });
+
+
+//  REDIS for caching
+/* builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration["Redis:ConnectionString"];
+}); */
 
 var app = builder.Build();
 
