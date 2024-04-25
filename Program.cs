@@ -82,6 +82,12 @@ builder.Services.AddResponseCaching(options =>
 });
 
 builder.Services.AddMemoryCache();
+builder.Services.AddDistributedSqlServerCache(options =>
+{
+    options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.SchemaName = "dbo";
+    options.TableName = "AppCache";
+});
 
 var app = builder.Build();
 
