@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MyBGList.Constants;
 using MyBGList.Models;
 using MyBGList.Swagger;
@@ -51,6 +54,40 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddIdentity<ApiUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 12;
+}).AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddAuthentication(options =>
+{
+    var jwtBearerScheme = JwtBearerDefaults.AuthenticationScheme;
+
+    options.DefaultAuthenticateScheme = jwtBearerScheme;
+    options.DefaultChallengeScheme = jwtBearerScheme;
+    options.DefaultForbidScheme = jwtBearerScheme;
+    options.DefaultScheme = jwtBearerScheme;
+    options.DefaultSignInScheme = jwtBearerScheme;
+    options.DefaultSignOutScheme = jwtBearerScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        RequireExpirationTime = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
+    };
+});
+
 builder.Logging.ClearProviders().AddSimpleConsole().AddDebug().AddApplicationInsights(
     telemetry => telemetry.ConnectionString = builder.Configuration["Azure:ApplicationInsights:ConnectionString"], loggerOptions => { }
 );
@@ -120,6 +157,7 @@ else
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseResponseCaching();
+app.UseAuthentication();
 app.UseAuthorization();
 app.Use((context, next) =>
 {
