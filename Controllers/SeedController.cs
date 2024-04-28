@@ -1,6 +1,7 @@
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBGList.Models;
@@ -8,6 +9,7 @@ using MyBGList.Models.Csv;
 
 namespace MyBGList.Controllers
 {
+    [Authorize]
     [Route(template: "[controller]")]
     [ApiController]
     public class SeedController : ControllerBase

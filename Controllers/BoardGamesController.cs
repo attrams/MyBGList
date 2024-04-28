@@ -1,5 +1,6 @@
 using System.Linq.Dynamic.Core;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -52,7 +53,7 @@ namespace MyBGList.Controllers
 
             return new RestDTO<BoardGame[]>()
             {
-                Data = result,
+                Data = result!,
                 PageIndex = input.PageIndex,
                 PageSize = input.PageSize,
                 RecordCount = recordCount,
@@ -62,6 +63,7 @@ namespace MyBGList.Controllers
             };
         }
 
+        [Authorize]
         [HttpPost(Name = "UpdateBoardGame")]
         [ResponseCache(CacheProfileName = "NoCache")]
         public async Task<RestDTO<BoardGame?>> Post(BoardGameDTO model)
@@ -96,6 +98,7 @@ namespace MyBGList.Controllers
             };
         }
 
+        [Authorize]
         [HttpDelete(Name = "DeleteBoardGame")]
         [ResponseCache(CacheProfileName = "NoCache")]
         public async Task<RestDTO<BoardGame?>> Delete(int id)

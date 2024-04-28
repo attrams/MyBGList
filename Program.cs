@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MyBGList.Constants;
 using MyBGList.Models;
 using MyBGList.Swagger;
@@ -31,6 +33,31 @@ builder.Services.AddSwaggerGen(options =>
     {
         options.ParameterFilter<SortColumnFilter>();
         options.ParameterFilter<SortOrderFilter>();
+
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter a token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = "bearer"
+        });
+
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id="Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
     }
 );
 builder.Services.AddCors(options =>
@@ -234,6 +261,11 @@ app.MapGet("/cache/test/1", [EnableCors("AnyOrigin")] (HttpContext context) =>
 app.MapGet("/cache/test/2", [EnableCors("AnyOrigin")] (HttpContext context) =>
 {
     return Results.Ok();
+});
+
+app.MapGet("/auth/test/1", [Authorize][EnableCors("AnyOrigin")][ResponseCache(NoStore = true)] () =>
+{
+    return Results.Ok("You are authorized!");
 });
 
 app.Run();

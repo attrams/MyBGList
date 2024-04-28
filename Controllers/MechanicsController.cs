@@ -1,5 +1,6 @@
 using System.Linq.Dynamic.Core;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -58,6 +59,7 @@ public class MechanicsController : ControllerBase
         };
     }
 
+    [Authorize]
     [HttpPost(Name = "UpdateMechanic")]
     [ResponseCache(CacheProfileName = "NoCache")]
     public async Task<RestDTO<Mechanic?>> Post(MechanicDTO model)
@@ -84,6 +86,7 @@ public class MechanicsController : ControllerBase
         };
     }
 
+    [Authorize]
     [HttpDelete(Name = "DeleteMechanic")]
     [ResponseCache(CacheProfileName = "NoCache")]
     public async Task<RestDTO<Mechanic?>> Delete(int id)
