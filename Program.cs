@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -113,6 +114,13 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["JWT:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
     };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ModeratorWithMobilePhone", policy =>
+        policy.RequireClaim(ClaimTypes.Role, RoleNames.Moderator).RequireClaim(ClaimTypes.MobilePhone)
+    );
 });
 
 builder.Logging.ClearProviders().AddSimpleConsole().AddDebug().AddApplicationInsights(
@@ -264,6 +272,16 @@ app.MapGet("/cache/test/2", [EnableCors("AnyOrigin")] (HttpContext context) =>
 });
 
 app.MapGet("/auth/test/1", [Authorize][EnableCors("AnyOrigin")][ResponseCache(NoStore = true)] () =>
+{
+    return Results.Ok("You are authorized!");
+});
+
+app.MapGet("/auth/test/2", [Authorize(Roles = RoleNames.Moderator)][EnableCors("AnyOrigin")][ResponseCache(NoStore = true)] () =>
+{
+    return Results.Ok("You are authorized!");
+});
+
+app.MapGet("/auth/test/3", [Authorize(Roles = RoleNames.Administrator)][EnableCors("AnyOrigin")][ResponseCache(NoStore = true)] () =>
 {
     return Results.Ok("You are authorized!");
 });
